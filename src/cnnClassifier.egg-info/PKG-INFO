@@ -1,0 +1,42 @@
+Metadata-Version: 2.2
+Name: cnnClassifier
+Version: 0.0.0
+Summary: A small python package for a CNN app
+Home-page: https://github.com/Harry-Potter20/Kidney-Disease_Classifier--DeepLearning Project
+Author: Harry-Potter20
+Author-email: chukwudieke61@gmail.com
+Project-URL: Bug Tracker, https://github.com/Harry-Potter20/Kidney-Disease_Classifier--DeepLearning Project/issues
+Dynamic: author
+Dynamic: author-email
+Dynamic: description
+Dynamic: home-page
+Dynamic: project-url
+Dynamic: summary
+
+# Kidney-Disease-Classifier---DeepLearning-Project
+
+
+
+# Hoe to run?
+
+### STEPS:
+
+Clone the repo
+
+'''bash
+https://github.com/Harry-Potter20/Kidney-Disease-Classifier---DeepLearning-Project
+'''
+### STEP 01- Create a virtual environement after opening the repo
+
+'''bash
+python3 -m venv cnncls
+'''
+
+'''bash
+source cnncls/bin/activate
+
+### STEP 02- Install the requirements
+
+'''bash
+pip install -r requirements.txt
+'''
