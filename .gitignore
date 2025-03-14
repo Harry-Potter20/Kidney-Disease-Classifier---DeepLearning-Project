@@ -4,3 +4,5 @@
 *.pyd
 __pycache__/
 cnncls/
+artifacts/*
+logs/*.log 
