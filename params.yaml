@@ -1,8 +1,15 @@
-AUGMENTATION: True
+AUGMENTATION:
+  rotation_range: 40
+  width_shift_range: 0.2
+  height_shift_range: 0.2
+  shear_range: 0.2
+  zoom_range: 0.2
+  horizontal_flip: True
+  fill_mode: "nearest"
 IMAGE_SIZE: [224, 224, 3]
-BATCH_SIZE: 32
+BATCH_SIZE: 16
 INCLUDE_TOP: False
 EPOCHS: 100
 CLASSES: 4
 WEIGHTS: imagenet
-LEARNING_RATE: 0.001
+LEARNING_RATE: 0.0001

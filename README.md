@@ -37,3 +37,26 @@ source cnncls/bin/activate
 '''bash
 pip install -r requirements.txt
 '''
+
+#### cmd
+- mlflow ui
+
+#### dagshub
+[dagshub](https://dagshub.com/)
+
+MLFLOW_TRACKING_URI=https://dagshub.com/Harry-Potter20/Kidney-Disease-Classifier---DeepLearning-Project.mlflow \
+MLFLOW_TRACKING_USERNAME=Harry-Potter20 \
+MLFLOW_TRACKING_PASSWORD=d094eb8680b50e84269fa4303f872962deca1c15 \
+python script.py
+
+Run this to export as env variables
+
+'''bash
+
+export MLFLOW_TRACKING_URI=https://dagshub.com/Harry-Potter20/Kidney-Disease-Classifier---DeepLearning-Project.mlflow
+
+export MLFLOW_TRACKING_USERNAME=Harry-Potter20
+
+export MLFLOW_TRACKING_PASSWORD=d094eb8680b50e84269fa4303f872962deca1c15
+
+'''
