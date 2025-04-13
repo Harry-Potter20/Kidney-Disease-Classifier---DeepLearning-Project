@@ -18,6 +18,10 @@ class BaseModelConfig:
     params_include_top: bool
     params_weights: str
     params_classes: int
+    params_dense_units: int
+    params_dropout_rate: float
+    params_l2_regularization: float
+    params_freeze_till: int
 
 @dataclass(frozen=True)
 class TrainingConfig:
@@ -29,6 +33,9 @@ class TrainingConfig:
     params_batch_size: int
     params_is_augmentation: bool
     params_image_size: list
+    early_stopping_patience: int
+    reduce_lr_patience: int
+    reduce_lr_factor: float
 
 @dataclass(frozen=True)
 class EvaluationConfig:

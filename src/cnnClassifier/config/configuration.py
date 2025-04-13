@@ -44,8 +44,13 @@ class ConfigurationManager:
             params_learning_rate=self.params.LEARNING_RATE, 
             params_include_top=self.params.INCLUDE_TOP, 
             params_weights=self.params.WEIGHTS, 
-            params_classes=self.params.CLASSES
+            params_classes=self.params.CLASSES,
+            params_dense_units=self.params.DENSE_UNITS,
+            params_dropout_rate=self.params.DROPOUT_RATE,
+            params_l2_regularization=self.params.L2_REGULARIZATION,
+            params_freeze_till=self.params.FREEZE_TILL
         )
+
 
         return base_model_config
     
@@ -68,7 +73,10 @@ class ConfigurationManager:
                 params_batch_size=params.BATCH_SIZE, 
                 params_is_augmentation=params.AUGMENTATION, 
                 params_image_size=params.IMAGE_SIZE, 
-                )
+                early_stopping_patience=self.params.EARLY_STOPPING_PATIENCE,
+                reduce_lr_patience=self.params.REDUCE_LR_PATIENCE,
+                reduce_lr_factor=self.params.REDUCE_LR_FACTOR 
+        )
 
 
         return training_config

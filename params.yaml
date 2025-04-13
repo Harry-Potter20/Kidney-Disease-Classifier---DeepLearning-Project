@@ -1,15 +1,23 @@
 AUGMENTATION:
-  rotation_range: 40
-  width_shift_range: 0.2
-  height_shift_range: 0.2
-  shear_range: 0.2
-  zoom_range: 0.2
-  horizontal_flip: True
+  rotation_range: 30                # Slightly lower to retain medical image integrity
+  width_shift_range: 0.1            # Minor shifts help, but avoid extreme distortions
+  height_shift_range: 0.1
+  shear_range: 0.1
+  zoom_range: 0.1                   # Reduce aggressive zooming
+  horizontal_flip: True             # Good for symmetry; okay in most radiology cases
   fill_mode: "nearest"
+
 IMAGE_SIZE: [224, 224, 3]
-BATCH_SIZE: 16
+BATCH_SIZE: 32                      # Increased batch size for more stable gradients
 INCLUDE_TOP: False
-EPOCHS: 100
+EPOCHS: 50                          # You can reduce this with EarlyStopping enabled
 CLASSES: 4
 WEIGHTS: imagenet
-LEARNING_RATE: 0.0001
+LEARNING_RATE: 0.00005              # Slightly lower learning rate for better fine-tuning
+DENSE_UNITS: 256                    # For custom top layer
+DROPOUT_RATE: 0.5                   # Prevent overfitting
+L2_REGULARIZATION: 0.001           # Weight decay to reduce overfitting
+FREEZE_TILL: 100                    # Unfreeze last 100 layers for fine-tuning
+EARLY_STOPPING_PATIENCE: 5         # Stop training if no val_loss improvement
+REDUCE_LR_PATIENCE: 3              # Reduce LR when plateaus
+REDUCE_LR_FACTOR: 0.2              # LR shrink factor
