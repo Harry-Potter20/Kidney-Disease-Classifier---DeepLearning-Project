@@ -36,6 +36,10 @@ class TrainingConfig:
     early_stopping_patience: int
     reduce_lr_patience: int
     reduce_lr_factor: float
+    label_smoothing: float  # NEW
+    use_class_weights: bool  # NEW
+    use_mixup: bool          # NEW
+    use_cutmix: bool         # NEW
 
 @dataclass(frozen=True)
 class EvaluationConfig:

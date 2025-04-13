@@ -2,7 +2,7 @@ import os
 import urllib.request as request
 from zipfile import ZipFile
 import tensorflow as tf
-from tf.keras.regularizers import l2
+from tensorflow.keras.regularizers import l2
 from pathlib import Path 
 from cnnClassifier.entity.config_entity import BaseModelConfig
 
