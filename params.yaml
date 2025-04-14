@@ -17,8 +17,8 @@ LEARNING_RATE: 0.0001              # Slightly lower learning rate for better fin
 DENSE_UNITS: 256                    # For custom top layer
 DROPOUT_RATE: 0.5                   # Prevent overfitting
 L2_REGULARIZATION: 0.001           # Weight decay to reduce overfitting
-FREEZE_TILL: 100                    # Unfreeze last 100 layers for fine-tuning
-EARLY_STOPPING_PATIENCE: 5         # Stop training if no val_loss improvement
+FREEZE_TILL: 150                    # Unfreeze last 100 layers for fine-tuning
+EARLY_STOPPING_PATIENCE: 15        # Stop training if no val_loss improvement
 REDUCE_LR_PATIENCE: 3              # Reduce LR when plateaus
 REDUCE_LR_FACTOR: 0.2              # LR shrink factor
 LABEL_SMOOTHING: 0.1

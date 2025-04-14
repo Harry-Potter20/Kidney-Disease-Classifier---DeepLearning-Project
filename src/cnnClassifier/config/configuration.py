@@ -53,10 +53,10 @@ class ConfigurationManager:
         """Returns the list of callbacks used during training."""
         return [
             EarlyStopping(
-                monitor="val_loss", patience=self.params.EARLY_STOPPING_PATIENCE, restore_best_weights=True
+                monitor="val_accuracy", patience=self.params.EARLY_STOPPING_PATIENCE, restore_best_weights=True
             ),
             ReduceLROnPlateau(
-                monitor="val_loss", patience=self.params.REDUCE_LR_PATIENCE,
+                monitor="val_accuracy", patience=self.params.REDUCE_LR_PATIENCE,
                 factor=self.params.REDUCE_LR_FACTOR, verbose=1
             )
         ]
