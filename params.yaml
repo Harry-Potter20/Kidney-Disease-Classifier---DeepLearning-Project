@@ -10,10 +10,10 @@ AUGMENTATION:
 IMAGE_SIZE: [224, 224, 3]
 BATCH_SIZE: 32                      # Increased batch size for more stable gradients
 INCLUDE_TOP: False
-EPOCHS: 50                          # You can reduce this with EarlyStopping enabled
+EPOCHS: 100                          # You can reduce this with EarlyStopping enabled
 CLASSES: 4
 WEIGHTS: imagenet
-LEARNING_RATE: 0.00005              # Slightly lower learning rate for better fine-tuning
+LEARNING_RATE: 0.0001              # Slightly lower learning rate for better fine-tuning
 DENSE_UNITS: 256                    # For custom top layer
 DROPOUT_RATE: 0.5                   # Prevent overfitting
 L2_REGULARIZATION: 0.001           # Weight decay to reduce overfitting
@@ -24,3 +24,7 @@ REDUCE_LR_FACTOR: 0.2              # LR shrink factor
 LABEL_SMOOTHING: 0.1
 USE_MIXUP: True
 USE_CUTMIX: False
+MIXUP_ALPHA: 0.2
+CUTMIX_ALPHA: 1.0
+CLASS_WEIGHTS: true
+USE_CLASS_WEIGHTS: true

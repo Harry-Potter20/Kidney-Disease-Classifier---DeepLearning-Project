@@ -1,5 +1,8 @@
 from dataclasses import dataclass
 from pathlib import Path
+from typing import List, Optional
+import tensorflow as tf
+
 
 @dataclass(frozen=True)
 class DataIngestionConfig:
@@ -39,7 +42,12 @@ class TrainingConfig:
     label_smoothing: float  # NEW
     use_class_weights: bool  # NEW
     use_mixup: bool          # NEW
-    use_cutmix: bool         # NEW
+    use_cutmix: bool
+    mixup_alpha: float
+    cutmix_alpha: float
+    label_smoothing: float
+    class_weights: bool         # NEW
+    callbacks_list: Optional[List[tf.keras.callbacks.Callback]] = None 
 
 @dataclass(frozen=True)
 class EvaluationConfig:

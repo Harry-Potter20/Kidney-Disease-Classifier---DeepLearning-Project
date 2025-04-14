@@ -1,5 +1,5 @@
 from cnnClassifier.constants import *
-import os 
+import os
 from cnnClassifier.utils.common import read_yaml, create_directories, save_json
 from cnnClassifier.entity.config_entity import (
     DataIngestionConfig, 
@@ -8,6 +8,7 @@ from cnnClassifier.entity.config_entity import (
     EvaluationConfig
 )
 from pathlib import Path
+from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 
 
 class ConfigurationManager:
@@ -48,6 +49,18 @@ class ConfigurationManager:
         )
         return base_model_config
 
+    def get_callbacks(self):
+        """Returns the list of callbacks used during training."""
+        return [
+            EarlyStopping(
+                monitor="val_loss", patience=self.params.EARLY_STOPPING_PATIENCE, restore_best_weights=True
+            ),
+            ReduceLROnPlateau(
+                monitor="val_loss", patience=self.params.REDUCE_LR_PATIENCE,
+                factor=self.params.REDUCE_LR_FACTOR, verbose=1
+            )
+        ]
+
     def get_training_config(self) -> TrainingConfig:
         training = self.config.training
         base_model = self.config.base_model
@@ -79,7 +92,11 @@ class ConfigurationManager:
             use_cutmix=params.USE_CUTMIX,
             cutmix_alpha=params.CUTMIX_ALPHA,
             label_smoothing=params.LABEL_SMOOTHING,
-            class_weighting=params.CLASS_WEIGHTING
+            class_weights=params.CLASS_WEIGHTS, 
+            use_class_weights=params.USE_CLASS_WEIGHTS,
+
+            # ✅ Callbacks list
+            callbacks_list=self.get_callbacks()  # Add the callbacks here
         )
         return training_config
 
