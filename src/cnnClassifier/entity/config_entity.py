@@ -25,6 +25,12 @@ class BaseModelConfig:
     params_dropout_rate: float
     params_l2_regularization: float
     params_freeze_till: int
+    use_cosine_decay: bool
+    cosine_decay_type: str                  # "restart" or "normal"
+    first_decay_steps: int                  # in epochs
+    t_mul: float
+    m_mul: float
+    cosine_decay_alpha: float
 
 @dataclass(frozen=True)
 class TrainingConfig:

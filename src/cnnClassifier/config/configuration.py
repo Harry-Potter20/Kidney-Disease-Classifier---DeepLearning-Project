@@ -9,6 +9,7 @@ from cnnClassifier.entity.config_entity import (
 )
 from pathlib import Path
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.optimizers.schedules import CosineDecayRestarts
 
 
 class ConfigurationManager:
@@ -45,21 +46,35 @@ class ConfigurationManager:
             params_dense_units=self.params.DENSE_UNITS,
             params_dropout_rate=self.params.DROPOUT_RATE,
             params_l2_regularization=self.params.L2_REGULARIZATION,
-            params_freeze_till=self.params.FREEZE_TILL
+            params_freeze_till=self.params.FREEZE_TILL, 
+            use_cosine_decay=self.params.USE_COSINE_DECAY,
+            cosine_decay_type=self.params.COSINE_DECAY_TYPE,
+            first_decay_steps=self.params.FIRST_DECAY_STEPS,
+            t_mul=self.params.T_MULTIPLIER,
+            m_mul=self.params.M_MULTIPLIER,
+            cosine_decay_alpha=self.params.COSINE_DECAY_ALPHA
         )
         return base_model_config
 
     def get_callbacks(self):
-        """Returns the list of callbacks used during training."""
-        return [
+        callbacks = [
             EarlyStopping(
-                monitor="val_accuracy", patience=self.params.EARLY_STOPPING_PATIENCE, restore_best_weights=True
-            ),
-            ReduceLROnPlateau(
-                monitor="val_accuracy", patience=self.params.REDUCE_LR_PATIENCE,
-                factor=self.params.REDUCE_LR_FACTOR, verbose=1
+                monitor="val_accuracy",
+                patience=self.params.EARLY_STOPPING_PATIENCE,
+                restore_best_weights=True
             )
         ]
+    
+        if not self.params.USE_COSINE_DECAY:
+            callbacks.append(
+                ReduceLROnPlateau(
+                    monitor="val_accuracy",
+                    patience=self.params.REDUCE_LR_PATIENCE,
+                    factor=self.params.REDUCE_LR_FACTOR,
+                    verbose=1
+                )
+            )
+        return callbacks
 
     def get_training_config(self) -> TrainingConfig:
         training = self.config.training
@@ -110,3 +125,4 @@ class ConfigurationManager:
             params_batch_size=self.params.BATCH_SIZE
         )
         return eval_config
+
