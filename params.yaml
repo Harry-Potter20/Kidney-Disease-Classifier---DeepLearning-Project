@@ -16,7 +16,7 @@ WEIGHTS: imagenet
 LEARNING_RATE: 0.0001              # Slightly lower learning rate for better fine-tuning
 DENSE_UNITS: 128                    # For custom top layer
 DROPOUT_RATE: 0.5                   # Prevent overfitting
-L2_REGULARIZATION: 0.001           # Weight decay to reduce overfitting
+L2_REGULARIZATION: 0.0005          # Weight decay to reduce overfitting
 FREEZE_TILL: 150                    # Unfreeze last 150 layers for fine-tuning
 EARLY_STOPPING_PATIENCE: 15        # Stop training if no val_loss improvement
 REDUCE_LR_PATIENCE: 10
@@ -25,7 +25,7 @@ USE_COSINE_DECAY: true
 COSINE_DECAY_TYPE: "restart"       # options: "restart" or "normal"
 FIRST_DECAY_STEPS: 10              # in epochs
 T_MULTIPLIER: 2.0
-M_MULTIPLIER: 0.9
+M_MULTIPLIER: 1.0
 COSINE_DECAY_ALPHA: 0.1
 LABEL_SMOOTHING: 0.1
 USE_MIXUP: True
