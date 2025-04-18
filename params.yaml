@@ -1,3 +1,6 @@
+SHUFFLE_BUFFER_SIZE: 1000  # Adjust based on your dataset size/memory
+PREFETCH_BUFFER_SIZE: -1   # Use -1 to represent tf.data.AUTOTUNE
+CACHE_DATASET: True     
 AUGMENTATION:
   rotation_range: 30                # Slightly lower to retain medical image integrity
   width_shift_range: 0.1            # Minor shifts help, but avoid extreme distortions
@@ -18,7 +21,7 @@ DENSE_UNITS: 128                    # For custom top layer
 DROPOUT_RATE: 0.5                   # Prevent overfitting
 L2_REGULARIZATION: 0.0005          # Weight decay to reduce overfitting
 FREEZE_TILL: 150                    # Unfreeze last 150 layers for fine-tuning
-EARLY_STOPPING_PATIENCE: 15        # Stop training if no val_loss improvement
+EARLY_STOPPING_PATIENCE: 5       # Stop training if no val_loss improvement
 REDUCE_LR_PATIENCE: 10
 REDUCE_LR_FACTOR: 0.002
 USE_COSINE_DECAY: true

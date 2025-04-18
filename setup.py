@@ -14,7 +14,7 @@ AUTHOR_EMAIL = "chukwudieke61@gmail.com"
 
 
 setuptools.setup(
-    nae=SRC_REPO, 
+    name=SRC_REPO, 
     version=__version__, 
     author=AUTHOR_USER_NAME, 
     author_email=AUTHOR_EMAIL, 

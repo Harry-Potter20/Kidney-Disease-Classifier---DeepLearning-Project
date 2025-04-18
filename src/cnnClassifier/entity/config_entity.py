@@ -54,6 +54,9 @@ class TrainingConfig:
     label_smoothing: float
     class_weights: bool         # NEW
     callbacks_list: Optional[List[tf.keras.callbacks.Callback]] = None 
+    shuffle_buffer_size: int
+    prefetch_buffer_size: int       # Use -1 for tf.data.AUTOTUNE
+    cache_dataset: bool
 
 @dataclass(frozen=True)
 class EvaluationConfig:
@@ -63,3 +66,4 @@ class EvaluationConfig:
     mlflow_uri: str
     params_image_size: list
     params_batch_size: int
+    prefetch_buffer_size: int       # Use -1 for tf.data.AUTOTUNE

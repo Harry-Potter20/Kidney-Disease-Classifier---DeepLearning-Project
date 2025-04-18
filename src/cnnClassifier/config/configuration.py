@@ -110,6 +110,11 @@ class ConfigurationManager:
             class_weights=params.CLASS_WEIGHTS, 
             use_class_weights=params.USE_CLASS_WEIGHTS,
 
+            shuffle_buffer_size=params.SHUFFLE_BUFFER_SIZE,
+            prefetch_buffer_size=params.PREFETCH_BUFFER_SIZE, # -1 for AUTOTUNE
+            cache_dataset=params.get('CACHE_DATASET', True), # Default to False if missing
+
+
             # ✅ Callbacks list
             callbacks_list=self.get_callbacks()  # Add the callbacks here
         )

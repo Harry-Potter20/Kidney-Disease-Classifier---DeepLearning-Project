@@ -1,14 +1,12 @@
-import os
-import urllib.request as request
-from zipfile import ZipFile
 import tensorflow as tf
-import time
+import numpy as np
 from pathlib import Path
 from cnnClassifier.entity.config_entity import TrainingConfig
-from cnnClassifier.utils.augmentation import mixup_generator, cutmix_generator
+from cnnClassifier.utils.augmentation import mixup_tf, cutmix_tf
+
 
 class Training:
-    def __init__(self, config: TrainingConfig):
+    def __init__(self, config):
         self.config = config
         self.model = None
         self.train_data_size = None  # Will hold computed train data size
@@ -22,62 +20,51 @@ class Training:
             print(f"❌ Error loading model: {e}")
             raise e
 
-    def train_valid_generator(self):
-        """Sets up training and validation data generators, applies MixUp/CutMix if enabled."""
-        datagenerator_kwargs = dict(
-            rescale=1.0 / 255,
-            validation_split=0.30
-        )
-
-        dataflow_kwargs = dict(
-            target_size=self.config.params_image_size[:-1],
-            batch_size=self.config.params_batch_size,
-            interpolation="bicubic"
-        )
-
-        # Validation generator
-        valid_datagenerator = tf.keras.preprocessing.image.ImageDataGenerator(**datagenerator_kwargs)
-        self.valid_generator = valid_datagenerator.flow_from_directory(
-            directory=self.config.training_data,
-            subset="validation",
-            shuffle=False,
-            **dataflow_kwargs
-        )
-
-        # Training generator
-        if self.config.params_is_augmentation:
-            train_datagenerator = tf.keras.preprocessing.image.ImageDataGenerator(
-                rotation_range=30,
-                horizontal_flip=True,
-                width_shift_range=0.1,
-                height_shift_range=0.1,
-                shear_range=0.1,
-                zoom_range=0.1,
-                **datagenerator_kwargs
-            )
-        else:
-            train_datagenerator = valid_datagenerator
-
-        base_train_generator = train_datagenerator.flow_from_directory(
-            directory=self.config.training_data,
+    def load_dataset_from_directory(self):
+        """Loads training and validation datasets using tf.data."""
+        # Load training data
+        train_dataset = tf.keras.preprocessing.image_dataset_from_directory(
+            self.config.training_data,
+            validation_split=0.30,
             subset="training",
+            image_size=self.config.params_image_size[:-1],
+            batch_size=self.config.params_batch_size,
+            label_mode='categorical',
             shuffle=True,
-            **dataflow_kwargs
+            seed=42
         )
 
-        # Compute train data size
-        self.train_data_size = len(base_train_generator.filenames)
+        # Load validation data
+        valid_dataset = tf.keras.preprocessing.image_dataset_from_directory(
+            self.config.training_data,
+            validation_split=0.30,
+            subset="validation",
+            image_size=self.config.params_image_size[:-1],
+            batch_size=self.config.params_batch_size,
+            label_mode='categorical',
+            shuffle=False,
+            seed=42
+        )
 
-        # Apply MixUp or CutMix wrapper
+        # Apply MixUp or CutMix
         if self.config.use_mixup:
             print("🧪 Using MixUp augmentation...")
-            self.train_generator = mixup_generator(base_train_generator, alpha=self.config.mixup_alpha)
+            train_dataset = train_dataset.map(
+                lambda x, y: mixup_tf(x, y, alpha=self.config.mixup_alpha), 
+                num_parallel_calls=tf.data.AUTOTUNE
+            )
         elif self.config.use_cutmix:
             print("🧪 Using CutMix augmentation...")
-            self.train_generator = cutmix_generator(base_train_generator, alpha=self.config.cutmix_alpha)
-        else:
-            print("✅ Using standard data generator...")
-            self.train_generator = base_train_generator
+            train_dataset = train_dataset.map(
+                lambda x, y: cutmix_tf(x, y, alpha=self.config.cutmix_alpha),
+                num_parallel_calls=tf.data.AUTOTUNE
+            )
+
+        # Prefetch and cache for better performance
+        train_dataset = train_dataset.cache().prefetch(tf.data.AUTOTUNE)
+        valid_dataset = valid_dataset.cache().prefetch(tf.data.AUTOTUNE)
+
+        return train_dataset, valid_dataset
 
     @staticmethod
     def save_model(path: Path, model: tf.keras.Model):
@@ -91,18 +78,13 @@ class Training:
             print("ℹ️ Loading base model before training...")
             self.get_base_model()
 
-        if self.train_data_size is None:
-            raise ValueError("⚠️ train_data_size not computed. Make sure `train_valid_generator()` is called before training.")
-
-        self.steps_per_epoch = self.train_data_size // self.config.params_batch_size
-        self.validation_steps = self.valid_generator.samples // self.config.params_batch_size
+        # Load datasets
+        train_dataset, valid_dataset = self.load_dataset_from_directory()
 
         self.model.fit(
-            self.train_generator,
+            train_dataset,
             epochs=self.config.params_epochs,
-            steps_per_epoch=self.steps_per_epoch,
-            validation_data=self.valid_generator,
-            validation_steps=self.validation_steps,
+            validation_data=valid_dataset,
             callbacks=self.config.callbacks_list
         )
 
