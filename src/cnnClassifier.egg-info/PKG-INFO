@@ -1,23 +1,32 @@
-Metadata-Version: 2.2
+Metadata-Version: 2.1
 Name: cnnClassifier
 Version: 0.0.0
 Summary: A small python package for a CNN app
 Home-page: https://github.com/Harry-Potter20/Kidney-Disease_Classifier--DeepLearning Project
 Author: Harry-Potter20
 Author-email: chukwudieke61@gmail.com
+License: UNKNOWN
 Project-URL: Bug Tracker, https://github.com/Harry-Potter20/Kidney-Disease_Classifier--DeepLearning Project/issues
-Dynamic: author
-Dynamic: author-email
-Dynamic: description
-Dynamic: home-page
-Dynamic: project-url
-Dynamic: summary
+Platform: UNKNOWN
+License-File: LICENSE
 
 # Kidney-Disease-Classifier---DeepLearning-Project
 
 
+## Workflows
 
-# Hoe to run?
+1. Update config.yaml
+2. Update secrets.yaml [Optional]
+3. Update params.yaml
+4. Update the entity
+5. Update the configuration manager in src config
+6. Update the components
+7. Update the pipeline
+8. Update the main.py
+9. Update the dvc.yaml
+10. app.py
+
+# How to run?
 
 ### STEPS:
 
@@ -40,3 +49,27 @@ source cnncls/bin/activate
 '''bash
 pip install -r requirements.txt
 '''
+
+#### cmd
+- mlflow ui
+
+#### dagshub
+[dagshub](https://dagshub.com/)
+
+MLFLOW_TRACKING_URI=https://dagshub.com/Harry-Potter20/Kidney-Disease-Classifier---DeepLearning-Project.mlflow \
+MLFLOW_TRACKING_USERNAME=Harry-Potter20 \
+MLFLOW_TRACKING_PASSWORD=d094eb8680b50e84269fa4303f872962deca1c15 \
+python script.py
+
+Run this to export as env variables
+
+'''bash
+
+export MLFLOW_TRACKING_URI=https://dagshub.com/Harry-Potter20/Kidney-Disease-Classifier---DeepLearning-Project.mlflow
+
+export MLFLOW_TRACKING_USERNAME=Harry-Potter20
+
+export MLFLOW_TRACKING_PASSWORD=d094eb8680b50e84269fa4303f872962deca1c15
+
+'''
+

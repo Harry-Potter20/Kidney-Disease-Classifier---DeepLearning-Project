@@ -16,9 +16,8 @@ class ModelTrainingPipeline:
         config = ConfigurationManager()
         training_config = config.get_training_config()
         training =Training(config=training_config)
-        training.train_valid_generator()
         training.train()
-
+        
 
 if __name__ == '__main__':
     try:

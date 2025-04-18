@@ -38,6 +38,9 @@ class TrainingConfig:
     trained_model_path: Path
     updated_base_model_path: Path
     training_data: Path
+    cache_dataset: bool
+    shuffle_buffer_size: int
+    prefetch_buffer_size: int       # Use -1 for tf.data.AUTOTUNE
     params_epochs: int
     params_batch_size: int
     params_is_augmentation: bool
@@ -54,16 +57,15 @@ class TrainingConfig:
     label_smoothing: float
     class_weights: bool         # NEW
     callbacks_list: Optional[List[tf.keras.callbacks.Callback]] = None 
-    shuffle_buffer_size: int
-    prefetch_buffer_size: int       # Use -1 for tf.data.AUTOTUNE
-    cache_dataset: bool
+   
 
 @dataclass(frozen=True)
 class EvaluationConfig:
     path_of_model: Path
     training_data: Path
+    prefetch_buffer_size: int       # Use -1 for tf.data.AUTOTUNE
     all_params: dict
     mlflow_uri: str
     params_image_size: list
     params_batch_size: int
-    prefetch_buffer_size: int       # Use -1 for tf.data.AUTOTUNE
+    
