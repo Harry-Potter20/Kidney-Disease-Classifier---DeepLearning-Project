@@ -1,5 +1,6 @@
 from cnnClassifier.constants import *
 import os
+import tensorflow as tf
 from cnnClassifier.utils.common import read_yaml, create_directories, save_json
 from cnnClassifier.entity.config_entity import (
     DataIngestionConfig, 
@@ -8,7 +9,7 @@ from cnnClassifier.entity.config_entity import (
     EvaluationConfig
 )
 from pathlib import Path
-from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
+from tensorflow.keras.regularizers import EarlyStopping, ReduceLROnPlateau
 from tensorflow.keras.optimizers.schedules import CosineDecayRestarts
 
 
