@@ -13,7 +13,7 @@ AUGMENTATION:
 IMAGE_SIZE: [224, 224, 3]
 BATCH_SIZE: 32                      # Increased batch size for more stable gradients
 INCLUDE_TOP: False
-EPOCHS: 10                         # You can reduce this with EarlyStopping enabled
+EPOCHS: 3                       # You can reduce this with EarlyStopping enabled
 CLASSES: 4
 WEIGHTS: imagenet
 LEARNING_RATE: 0.0001              # Slightly lower learning rate for better fine-tuning
