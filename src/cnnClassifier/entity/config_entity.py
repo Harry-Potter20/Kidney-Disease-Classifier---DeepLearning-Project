@@ -11,6 +11,7 @@ class DataIngestionConfig:
     local_data_file: Path
     unzip_dir: Path
 
+
 @dataclass(frozen=True)
 class BaseModelConfig:
     root_dir: Path
@@ -32,6 +33,7 @@ class BaseModelConfig:
     m_mul: float
     cosine_decay_alpha: float
 
+
 @dataclass(frozen=True)
 class TrainingConfig:
     root_dir: Path
@@ -48,16 +50,15 @@ class TrainingConfig:
     early_stopping_patience: int
     reduce_lr_patience: int
     reduce_lr_factor: float
-    label_smoothing: float  # NEW
-    use_class_weights: bool  # NEW
-    use_mixup: bool          # NEW
+    label_smoothing: float
+    use_class_weights: bool         # Use class weights
+    use_mixup: bool
     use_cutmix: bool
     mixup_alpha: float
     cutmix_alpha: float
-    label_smoothing: float
-    class_weights: bool         # NEW
-    callbacks_list: Optional[List[tf.keras.callbacks.Callback]] = None 
-   
+    class_weights: bool
+    callbacks_list: Optional[List[tf.keras.callbacks.Callback]] = None
+
 
 @dataclass(frozen=True)
 class EvaluationConfig:
@@ -68,4 +69,3 @@ class EvaluationConfig:
     mlflow_uri: str
     params_image_size: list
     params_batch_size: int
-    

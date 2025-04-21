@@ -12,45 +12,48 @@ class BaseModel:
         self.config = config
 
     def get_base_model(self):
-        """Loads the base model (ResNet101V2) and saves it."""
+        """Loads and saves the base model without custom top layers."""
         self.model = tf.keras.applications.ResNet101V2(
             input_shape=self.config.params_image_size,
             weights=self.config.params_weights,
             include_top=self.config.params_include_top
         )
-        self.save_model(path=self.config.base_model_path, model=self.model)
+        self.save_model(self.config.base_model_path, self.model)
 
     @staticmethod
-    def prepare_full_model(model, classes, freeze_all=True, freeze_till=None, learning_rate_schedule=None):
-        """Prepares the model by adding custom layers and applying learning rate scheduling."""
+    def prepare_full_model(model, config: BaseModelConfig, learning_rate_schedule=None):
+        """Adds custom layers including BatchNorm and compiles the full model."""
         # Freeze layers if needed
-        if freeze_all:
+        if config.params_freeze_till is not None and config.params_freeze_till > 0:
+            for layer in model.layers[:-config.params_freeze_till]:
+                layer.trainable = False
+        else:
             for layer in model.layers:
                 layer.trainable = False
-        elif freeze_till is not None and freeze_till > 0:
-            for layer in model.layers[:-freeze_till]:
-                layer.trainable = False
 
-        # Add custom top layers
+        # Top layers
         x = tf.keras.layers.Flatten()(model.output)
-        x = tf.keras.layers.Dropout(0.5)(x)  # Dropout to reduce overfitting
+        x = tf.keras.layers.Dropout(config.params_dropout_rate)(x)
         x = tf.keras.layers.Dense(
-            128,
+            config.params_dense_units,
             activation='relu',
-            kernel_regularizer=l2(0.001)
+            kernel_regularizer=l2(config.params_l2_regularization)
         )(x)
-        x = tf.keras.layers.Dropout(0.5)(x)  # Another Dropout
+        x = tf.keras.layers.BatchNormalization()(x)  # ✅ Added BatchNormalization
+        x = tf.keras.layers.Dropout(config.params_dropout_rate)(x)
         prediction = tf.keras.layers.Dense(
-            units=classes,
+            units=config.params_classes,
             activation="softmax",
-            kernel_regularizer=l2(0.001)
+            kernel_regularizer=l2(config.params_l2_regularization)
         )(x)
 
         full_model = tf.keras.models.Model(inputs=model.input, outputs=prediction)
 
-        # If a learning rate schedule is provided, use it; otherwise, use the default fixed learning rate
+        # Use cosine decay schedule if available
+        learning_rate = learning_rate_schedule if learning_rate_schedule else config.params_learning_rate
+
         full_model.compile(
-            optimizer=tf.keras.optimizers.AdamW(learning_rate=learning_rate_schedule),
+            optimizer=tf.keras.optimizers.AdamW(learning_rate=learning_rate),
             loss=tf.keras.losses.CategoricalCrossentropy(),
             metrics=["accuracy"]
         )
@@ -59,30 +62,27 @@ class BaseModel:
         return full_model
 
     def update_base_model(self):
-        """Update the base model to the full model with custom top layers and LR scheduler."""
-        # Define CosineDecayRestarts learning rate scheduler
-        learning_rate_schedule = CosineDecayRestarts(
-            initial_learning_rate=self.config.params_learning_rate,
-            first_decay_steps=self.config.first_decay_steps,
-            t_mul=self.config.t_mul,
-            m_mul=self.config.m_mul,
-            alpha=self.config.cosine_decay_alpha,
-        )
+        """Applies custom layers and compiles model with or without learning rate schedule."""
+        learning_rate_schedule = None
 
+        if self.config.use_cosine_decay:
+            learning_rate_schedule = CosineDecayRestarts(
+                initial_learning_rate=self.config.params_learning_rate,
+                first_decay_steps=self.config.first_decay_steps,
+                t_mul=self.config.t_mul,
+                m_mul=self.config.m_mul,
+                alpha=self.config.cosine_decay_alpha,
+            )
 
-        # Prepare the full model with the learning rate schedule
         self.full_model = self.prepare_full_model(
             model=self.model,
-            classes=self.config.params_classes,
-            freeze_all=True,  # You can change to False and set freeze_till if needed
-            freeze_till=None,
+            config=self.config,
             learning_rate_schedule=learning_rate_schedule
         )
 
-        # Save the updated model
-        self.save_model(path=self.config.updated_base_model_path, model=self.full_model)
+        self.save_model(self.config.updated_base_model_path, self.full_model)
 
     @staticmethod
     def save_model(path: Path, model: tf.keras.Model):
-        """Helper function to save the model."""
+        """Saves the model to the specified path."""
         model.save(path)

@@ -6,3 +6,15 @@ __pycache__/
 cnncls/
 artifacts/*
 logs/*.log 
+*.env
+# Ignore TensorFlow model checkpoints
+checkpoint/
+*.ckpt
+*.h5
+
+# Ignore MLflow artifacts and logs
+mlruns/
+*.pkl
+
+# Ignore any .env files
+*.env
