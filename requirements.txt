@@ -2,6 +2,7 @@ tensorflow==2.12.0
 tensorflow_probability==0.20.0
 pandas
 dvc
+streamlit
 mlflow==2.2.2
 notebook
 numpy

@@ -1,0 +1,8 @@
+{
+    "class_names": [
+        "Cyst",
+        "Normal",
+        "Stone",
+        "Tumor"
+    ]
+}
