@@ -58,10 +58,18 @@ st.markdown(
 CLASS_NAMES_PATH = Path("model/class_names/class_names.json")
 MODEL_PATH = Path("model/model.h5")
 
-with open(CLASS_NAMES_PATH, "r") as f:
-    class_names = json.load(f)["class_names"]
+# Check if class names file exists
+if not os.path.exists(CLASS_NAMES_PATH):
+    st.error(f"Class names file not found at {CLASS_NAMES_PATH}. Please check the file path.")
+else:
+    with open(CLASS_NAMES_PATH, "r") as f:
+        class_names = json.load(f)["class_names"]
 
-model = load_model(MODEL_PATH)
+# Check if model file exists
+if not os.path.exists(MODEL_PATH):
+    st.error(f"Model file not found at {MODEL_PATH}. Please check the file path.")
+else:
+    model = load_model(MODEL_PATH)
 
 # === Prediction Function ===
 def preprocess_image(img, target_size=(224, 224)):
