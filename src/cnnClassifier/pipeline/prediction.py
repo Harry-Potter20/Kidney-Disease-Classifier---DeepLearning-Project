@@ -7,13 +7,22 @@ from pathlib import Path
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image as keras_image
 
+# === Setup base path ===
+BASE_DIR = Path(__file__).resolve().parent
+
 # === Load class names from class_names.json ===
-CLASS_NAMES_PATH = Path("model/class_names/class_names.json")
+CLASS_NAMES_PATH = BASE_DIR / "model" / "class_names" / "class_names.json"
+if not CLASS_NAMES_PATH.exists():
+    raise FileNotFoundError(f"Could not find class names file at: {CLASS_NAMES_PATH}")
+
 with open(CLASS_NAMES_PATH, "r") as f:
     class_names = json.load(f)["class_names"]
 
 # === Load trained model ===
-MODEL_PATH = Path("model/model.h5")
+MODEL_PATH = BASE_DIR / "model" / "model.h5"
+if not MODEL_PATH.exists():
+    raise FileNotFoundError(f"Could not find model file at: {MODEL_PATH}")
+
 model = load_model(MODEL_PATH)
 
 def preprocess_image(img_path: str, target_size=(224, 224)):

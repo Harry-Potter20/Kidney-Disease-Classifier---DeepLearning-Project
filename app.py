@@ -55,8 +55,8 @@ st.markdown(
 )
 
 # === Load class names and model ===
-CLASS_NAMES_PATH = Path("artifacts/data_ingestion/class_names.json")
-MODEL_PATH = Path("artifacts/training/model.h5")
+CLASS_NAMES_PATH = Path("model/class_names/class_names.json")
+MODEL_PATH = Path("model/model.h5")
 
 with open(CLASS_NAMES_PATH, "r") as f:
     class_names = json.load(f)["class_names"]
