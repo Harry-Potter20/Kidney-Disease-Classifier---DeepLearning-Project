@@ -4,17 +4,26 @@
 *.pyd
 __pycache__/
 cnncls/
-artifacts/*
-logs/*.log 
-*.env
-# Ignore TensorFlow model checkpoints
-checkpoint/
-*.ckpt
-*.h5
 
-# Ignore MLflow artifacts and logs
+# Ignore all files in artifacts folder
+artifacts/*
+
+# Ignore logs except .gitkeep (if used)
+logs/*.log 
+
+# Environment files
+*.env
+
+# TensorFlow and PyTorch model checkpoints (global ignore)
+*.ckpt
+
+# MLflow tracking artifacts
 mlruns/
+
+# Default: ignore .h5 and .pkl files everywhere
+*.h5
 *.pkl
 
-# Ignore any .env files
-*.env
+# ✅ EXCEPTIONS: allow versioned model files in the model/ folder (for Git LFS)
+!model/*.h5
+!model/*.pkl
